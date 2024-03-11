@@ -1,0 +1,100 @@
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
+PYTHONPATH=".:/home/rmjames0345/officalSource/luigi"
+LUIGI_CONFIG_PATH='/home/rmjames0345/luigi/luigi.cfg'
+SHELLPATH='/home/rmjames0345/shell'
+
+#ETL: player redPacket
+15 * * * * source ${SHELLPATH}/runDT_redPacket.sh
+
+#player system
+50 1 * * * source ${SHELLPATH}/runPS_userMissionDaily.sh
+50 2 * * * source ${SHELLPATH}/runPS_userInfoDaily.sh
+30 * * * * source ${SHELLPATH}/runPS_treasureRecordByHour.sh
+
+#ETL: cypress mongoDB to analysis mongoDB
+4 * * * * source ${SHELLPATH}/runDT_order.sh
+35 * * * * source ${SHELLPATH}/runDT_recommendGame.sh
+2 * * * *  source ${SHELLPATH}/runDT_transaction.sh
+
+#ETL: hour to day
+44 20 * * * source ${SHELLPATH}/runDT_hour2day_order.sh
+51 20 * * * source ${SHELLPATH}/runDT_hour2day_transaction.sh
+
+#ETL: revise dataWarehouse
+15 5 * * * source ${SHELLPATH}/runDT_revise_hour2day_order.sh
+
+#ETL: weekly job, betDistribution
+30 11 * * 3 source ${SHELLPATH}/runDT_betDistribution.sh
+
+#ETL: weekly job, cluster
+30 13 * * 3 source ${SHELLPATH}/runDT_week_cluster.sh
+
+#ETL: weekly job, player_favorite_game
+30 12 * * 3 source ${SHELLPATH}/runDT_week_favorite.sh
+
+#ETL: monthly job, cluster & tag
+0 0 3 */1 * source ${SHELLPATH}/runDT_cluster.sh
+
+#ETL: redenv_info
+30 20 * * * source ${SHELLPATH}/runDT_redenvInfo.sh
+
+#ETL: get lost gameToken
+15 * * * * source ${SHELLPATH}/runDT_getLostGameToken.sh
+
+#ETL: player IP convert
+#1 7 * * * source ${SHELLPATH}/runDT_IPConvert.sh
+
+# start:BtoB recommend game
+# recommend game
+30 12 * * 3 source ${SHELLPATH}/runBtoB_recommendGame.sh
+
+# manual setting game
+*/15 * * * * source ${SHELLPATH}/runBtoB_manualSettingGame.sh
+
+# hotranking
+0 * * * * source ${SHELLPATH}/runBtoB_hotRanking.sh
+
+# gameInfo
+*/10 * * * * source ${SHELLPATH}/runBtoB_gameInfo.sh
+
+# reset gameInfo
+0 20 * * * source ${SHELLPATH}/runBtoB_resetGameInfo.sh
+
+# download google file
+*/40 * * * * source ${SHELLPATH}/runBtoB_download.sh
+
+# parent closed game
+*/20 * * * * source ${SHELLPATH}/runBtoB_parentClosedGame.sh
+
+# update icon url
+20 */6 * * * source ${SHELLPATH}/runBtoB_icon_url.sh
+
+# parent white game
+*/30 * * * * source ${SHELLPATH}/runBtoB_parentWhiteGame.sh
+
+# set manual setting game
+0 */16 * * * source ${SHELLPATH}/ETL_setManualSettingGame.sh
+# end:BtoB recommen game
+
+#ETL: parent single RTP
+0 */3 * * * source ${SHELLPATH}/runParentSingleRTP.sh
+
+#sales monthly requirement
+0 0 3 * * source ${SHELLPATH}/runDT_salesIDRParentsInfo.sh
+
+#ETL: monthly job, GO02 bullets stats
+#0 1 3 * * source ${SHELLPATH}/runDT_GO02.sh
+
+#ETL: monthly job, AB3 bullets stats
+#0 3 3 * * source ${SHELLPATH}/runDT_AB3_stat.sh
+
+#ETL: dailyjob, AB3
+20 22 * * * source ${SHELLPATH}/runDT_AB3_dataByDay.sh
+
+#ETL: dailyjob, GO fish game
+1 5 * * * source ${SHELLPATH}/runDT_GO_fishGame.sh
+
+#delete old log file
+0 */6 * * * /home/rmjames0345/shell/deleteOldLogFile.sh
+

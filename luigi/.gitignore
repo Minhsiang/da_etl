@@ -1,0 +1,25 @@
+#Byte_compiled / optimized / DLL files
+.project
+.pydevproject
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#log
+log/
+*.log
+*.log.*
+
+#ctags
+tags
+#vim 
+*.sw*
+
+files/
+
+#client_secrets.json
+#token.pickle
+*.csv
+
+nohup.out
